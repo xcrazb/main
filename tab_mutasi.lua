@@ -1,5 +1,5 @@
 -- ============================================================
--- TAB MUTASI (Mode Gear + Mode DiamondCookie)
+-- TAB MUTASI (Gear + DiamondCookie) + WEBHOOK TARGET-ONLY
 -- ============================================================
 
 local APM = _G.APM
@@ -7,6 +7,41 @@ local R, S, CFG, lp = APM.R, APM.S, APM.CFG, APM.lp
 local safeFire, safeInvoke = APM.safeFire, APM.safeInvoke
 
 local MutTab = APM.Window:CreateTab("Mutasi", 4483362458)
+
+-- ============================================================
+-- WEBHOOK SETUP
+-- ============================================================
+MutTab:CreateSection("🔔 Webhook (Target Only)")
+
+MutTab:CreateInput({
+    Name = "Webhook URL",
+    CurrentValue = "",
+    PlaceholderText = "https://discord.com/api/webhooks/...",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(text)
+        if text and text ~= "" then
+            APM.WEBHOOK_URL = text
+            print("[Webhook] URL di-set")
+        end
+    end,
+})
+
+APM.mkToggle(MutTab, "Aktifkan Webhook", "WebhookToggle", true, function(v)
+    APM.webhookOn = v
+end)
+
+APM.mkButton(MutTab, "🧪 Test Webhook", function()
+    if not APM.WEBHOOK_URL or APM.WEBHOOK_URL == "" then
+        warn("[Webhook] Isi URL dulu di input atas")
+        return
+    end
+    APM.sendWebhook(
+        "🧪 Test Webhook",
+        "Koneksi berhasil!\nUser: `" .. lp.Name .. "`\nWaktu: `" .. os.date("%Y-%m-%d %H:%M:%S") .. "`",
+        APM.WH_COLOR.info
+    )
+    print("[Webhook] Test dikirim")
+end)
 
 -- ============================================================
 -- MODE GEAR
@@ -135,6 +170,8 @@ local function insertPet(id)
     if ok then S.mutInProg[id] = true; S.mutDone[id] = true; return true end
     return false
 end
+
+-- === DO MUTATION (Gear) — webhook hanya saat target tercapai ===
 local function doMut()
     local now = os.clock()
     if (now - S.lastMutAct) < CFG.Gear.MutationCooldown then return end
@@ -146,6 +183,28 @@ local function doMut()
         if pcall(function() R.collectMut:InvokeServer() end) then
             for _, id in ipairs(col) do S.totalMut += 1; S.mutDone[id] = nil end
             S.mutInProg = {}; S.lastMutAct = now
+
+            -- Cek target setelah data update
+            task.wait(1)
+            local data = APM.getData()
+            if data then
+                for _, id in ipairs(col) do
+                    local pd = data.inventory.pets[id]
+                    if pd then
+                        local m = APM.getMut(pd)
+                        if APM.isDesired(m) then
+                            APM.sendWebhook(
+                                "🎯 Target Mutasi Tercapai!",
+                                "**Pet ID:** `" .. tostring(id) .. "`\n" ..
+                                "**Mutasi:** `" .. tostring(m) .. "`\n" ..
+                                "**Total Mutasi:** " .. S.totalMut,
+                                APM.WH_COLOR.target
+                            )
+                        end
+                    end
+                end
+            end
+
             task.wait(CFG.Gear.MutCollectSyncDelay)
         end
         return
@@ -161,6 +220,7 @@ local function doMut()
         if insertPet(c[1].id) then S.lastMutAct = now; task.wait(0.5); ensureLO(CFG.Gear.MutWaitLO) end
     end
 end
+
 local function boostLoop()
     ensureLO(CFG.Gear.BoostLO)
     while S.gearRun do
@@ -347,6 +407,7 @@ local function dcDoAge()
     return true
 end
 
+-- === DO INSERT (DC) — webhook hanya saat target tercapai ===
 local function dcDoInsert()
     for _, id in ipairs(S.dcOrder) do
         if not S.dcRun then return false end
@@ -392,7 +453,22 @@ local function dcDoInsert()
                             else
                                 local m = dcParseMut(cr)
                                 S.dcStats.Mut += 1; p.mutations = (p.mutations or 0) + 1; p.lastMutation = m
-                                if dcIsTarget(m) then p.targetHit = true; p.locked = true end
+
+                                if dcIsTarget(m) then
+                                    p.targetHit = true; p.locked = true
+                                    -- WEBHOOK: hanya saat target tercapai
+                                    local h = 0
+                                    for _, qid in ipairs(S.dcOrder) do if S.dcQueue[qid].targetHit then h += 1 end end
+                                    APM.sendWebhook(
+                                        "🎯 [DiamondCookie] Target Tercapai!",
+                                        "**Pet:** `" .. p.displayName .. "`\n" ..
+                                        "**Mutasi:** `" .. tostring(m) .. "`\n" ..
+                                        "**Total Mutasi:** " .. S.dcStats.Mut .. "\n" ..
+                                        "**Hit:** " .. h .. "/" .. #S.dcOrder,
+                                        APM.WH_COLOR.target
+                                    )
+                                end
+
                                 if dcAllHit() then return "ALL_DONE" end
                                 local cw = 0
                                 while cw < 30 do
