@@ -9,9 +9,9 @@ local FILES = {
     "core.lua",
     "webhook.lua",
     "1.lua",
-    "tab_shop.lua",
-    "tab_event.lua",
-    "tab_food_craft.lua",
+    "2.lua",
+    "3.lua",
+    "4.lua",
 }
 
 _G.APM = _G.APM or {}
