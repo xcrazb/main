@@ -1,9 +1,9 @@
 -- ============================================================
 -- LOADER — execute semua tab dari GitHub raw
--- Ganti USER/REPO/BRANCH sesuai repo kamu
+-- USER: xcrab | REPO: main | BRANCH: main
 -- ============================================================
 
-local BASE = "https://raw.githubusercontent.com/USER/REPO/main/"
+local BASE = "https://raw.githubusercontent.com/xcrab/main/main/"
 
 local FILES = {
     "core.lua",
@@ -13,26 +13,25 @@ local FILES = {
     "tab_food_craft.lua",
 }
 
--- Shared table untuk komunikasi antar file
--- (dipakai semua file sebagai global)
 _G.APM = _G.APM or {}
 _G.APM.base = BASE
 
 local function loadFile(name)
     local url = BASE .. name
     local ok, src = pcall(function() return game:HttpGet(url, true) end)
-    if not ok or not src or src == "" then
-        warn("[Loader] Gagal ambil: " .. url)
+    if not ok or not src or src == "" or src:match("^404:") or src:match("<html") then
+        warn("[Loader] ❌ Gagal ambil: " .. url)
+        warn("[Loader] Cek: user='xcrab' repo='main' branch='main' file='" .. name .. "'")
         return false
     end
     local fn, err = loadstring(src, "=" .. name)
     if not fn then
-        warn("[Loader] Syntax error di " .. name .. ": " .. tostring(err))
+        warn("[Loader] ❌ Syntax error di " .. name .. ": " .. tostring(err))
         return false
     end
     local ok2, err2 = pcall(fn)
     if not ok2 then
-        warn("[Loader] Runtime error di " .. name .. ": " .. tostring(err2))
+        warn("[Loader] ❌ Runtime error di " .. name .. ": " .. tostring(err2))
         return false
     end
     print("[Loader] ✓ " .. name)
