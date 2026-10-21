@@ -7,6 +7,7 @@ local BASE = "https://raw.githubusercontent.com/xcrazb/main/main/"
 
 local FILES = {
     "core.lua",
+    "webhook.lua",
     "tab_mutasi.lua",
     "tab_shop.lua",
     "tab_event.lua",
