@@ -1,9 +1,9 @@
 -- ============================================================
 -- LOADER — execute semua tab dari GitHub raw
--- USER: xcrab | REPO: main | BRANCH: main
+-- USER: xcrazb | REPO: main | BRANCH: main
 -- ============================================================
 
-local BASE = "https://raw.githubusercontent.com/xcrab/main/main/"
+local BASE = "https://raw.githubusercontent.com/xcrazb/main/main/"
 
 local FILES = {
     "core.lua",
@@ -21,7 +21,7 @@ local function loadFile(name)
     local ok, src = pcall(function() return game:HttpGet(url, true) end)
     if not ok or not src or src == "" or src:match("^404:") or src:match("<html") then
         warn("[Loader] ❌ Gagal ambil: " .. url)
-        warn("[Loader] Cek: user='xcrab' repo='main' branch='main' file='" .. name .. "'")
+        warn("[Loader] Cek: user='xcrazb' repo='main' branch='main' file='" .. name .. "'")
         return false
     end
     local fn, err = loadstring(src, "=" .. name)
