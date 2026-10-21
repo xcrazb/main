@@ -48,7 +48,7 @@ APM.CFG = {
             "GoldenCookie","EggHatcher","EggIncubator","MutationBeacon","StormHorn"},
         EggWL = {"Tropical", "Exotic"},
     },
-    Food = { On = false, Int = 90, Type = "SupremeFoodTray", Cat = "booster",
+    Food = { On = false, Int = 30, Type = "SupremeFoodTray", Cat = "booster",
         Pos = Vector3.new(10.86, -0.012, -11) },
     Craft = { On = false, Item = "TimeJumper", Cat = "gear",
         Mats = {{n="TeleportWand",a=10},{n="MagnifyingGlass",a=25},{n="SupremeAutoFeeder",a=1}} },
