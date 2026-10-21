@@ -24,10 +24,10 @@ APM.lp = lp
 -- ---------- CONFIG ----------
 APM.CFG = {
     Gear = {
-        TargetAge = 50, MaxPlacePerWave = 4, JumperInterval = 1,
+        TargetAge = 50, MaxPlacePerWave = 4, JumperInterval = 2,
         WaitAfterPlace = 0.2, JumperCooldown = 1, MutationCooldown = 2,
         BoostLO = 1, MutInsertLO = 0, MutWaitLO = 3, MutCollectLO = 0,
-        LOSwitchDelay = 0.5, MutCollectSyncDelay = 1.5,
+        LOSwitchDelay = 1, MutCollectSyncDelay = 1.5,
         MaxCycles = 999, JumperBeforeSwitch = 3,
         JumperLOA = 1, JumperLOB = 0, JumperSwitchDelay = 1,
     },
