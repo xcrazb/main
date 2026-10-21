@@ -25,11 +25,11 @@ APM.lp = lp
 APM.CFG = {
     Gear = {
         TargetAge = 50, MaxPlacePerWave = 4, JumperInterval = 3,
-        WaitAfterPlace = 0.5, JumperCooldown = 1.5, MutationCooldown = 2,
+        WaitAfterPlace = 0.2, JumperCooldown = 1, MutationCooldown = 2,
         BoostLO = 1, MutInsertLO = 0, MutWaitLO = 3, MutCollectLO = 0,
-        LOSwitchDelay = 1.5, MutCollectSyncDelay = 1.5,
+        LOSwitchDelay = 0.5, MutCollectSyncDelay = 1.5,
         MaxCycles = 999, JumperBeforeSwitch = 3,
-        JumperLOA = 1, JumperLOB = 0, JumperSwitchDelay = 1.5,
+        JumperLOA = 1, JumperLOB = 0, JumperSwitchDelay = 1,
     },
     DC = {
         Gear = "DiamondCookie", SafetyMaxGear = 23,
