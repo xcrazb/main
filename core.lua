@@ -1,6 +1,5 @@
 -- ============================================================
 -- CORE — shared services, remote, window, state, helpers, scheduler
--- Semua modul lain baca/tulis lewat _G.APM
 -- ============================================================
 
 local APM = _G.APM
