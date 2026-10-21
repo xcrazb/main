@@ -28,7 +28,7 @@ APM.CFG = {
         WaitAfterPlace = 0.2, JumperCooldown = 1, MutationCooldown = 2,
         BoostLO = 1, MutInsertLO = 0, MutWaitLO = 3, MutCollectLO = 0,
         LOSwitchDelay = 0.5, MutCollectSyncDelay = 1.5,
-        MaxCycles = 999, JumperBeforeSwitch = 5,
+        MaxCycles = 999, JumperBeforeSwitch = 3,
         JumperLOA = 1, JumperLOB = 0, JumperSwitchDelay = 1,
     },
     DC = {
